@@ -19,6 +19,7 @@ class User {
         )
         return rows[0];
     }
+
     static  async validatePassword(plainPassword, hashedPassword) {
         return await bcrypt.compare(plainPassword, hashedPassword);
     }
