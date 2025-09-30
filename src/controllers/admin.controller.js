@@ -1,17 +1,25 @@
 const db = require("../../config/db");
 
 exports.createQuestion = (req, res) => {
-    console.log(req.body); 
-  const { thematique, question, options, correctAnswers } = req.body;
-  db.query(
-    "INSERT INTO Questions (thematique, question, options, correctAnswers) VALUES (?, ?, ?, ?)",
-    [thematique, question, JSON.stringify(options), correctAnswers],
-    (err, result) => {
-      if (err) return res.status(500).json(err);
-      res.status(201).json({ message: "Question ajoutée", id: result.insertId });
-    }
-  );
+    console.log("Request body:", req.body); 
+    const { thematique, question, options, correctAnswers } = req.body;
+    console.log("Inserting question...");
+    db.query(
+        "INSERT INTO Questions (thematique, question, options, correctAnswers) VALUES (?, ?, ?, ?)",
+        [thematique, question, JSON.stringify(options), correctAnswers],
+        (err, result) => {
+            console.log("DB callback triggered");
+            if (err) {
+                console.error("DB error:", err);
+                return res.status(500).json(err);
+            }
+            console.log("Insert successful:", result);
+            return res.status(201).json({ message: "Question ajoutée", id: result.insertId });
+        }
+    );
+    console.log("Query sent to DB");
 };
+
 
 exports.updateQuestion = (req, res) => {
     console.log("UPDATE ROUTE CALLED", req.params, req.body);
