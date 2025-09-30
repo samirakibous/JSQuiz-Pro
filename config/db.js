@@ -5,7 +5,7 @@ const pool = mysql.createPool({
     password: '',
     database: 'quiz',
     waitForConnections: true,
-    // connectTimeout: 10,
+    connectTimeout: 10,
     queueLimit: 0
 });
 module.exports = pool;
