@@ -1,10 +1,12 @@
 const express = require('express');
 const userRoutes = require('./user.routes');
+const adminRoutes = require('./admin.routes');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
 router.use('/api/users', userRoutes);
+router.use('/admin', adminRoutes);
 
 router.get('/', (req, res) => {
     res.render('home', { user: req.session?.user });
