@@ -1,4 +1,5 @@
 const db = require("../../config/db");
+const User = require('../models/user.model');
 
 exports.createQuestion = async (req, res) => {
     try {
@@ -31,3 +32,13 @@ exports.updateQuestion = async (req, res) => {
         res.status(500).json(err);
     }
 };
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAllUsers();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
