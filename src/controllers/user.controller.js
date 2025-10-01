@@ -11,10 +11,11 @@ const register = async (req, res) => {
         }
 
         const userId = await User.create({ username, password });
-        res.status(201).json({ message: 'User created successfully', userId });
+        res.redirect('/login');
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ error: error.message });
+
     }
 };
 
@@ -31,7 +32,7 @@ const login = async (req, res) => {
         req.session.token = token;
         req.session.user = { id: user.id, username: user.username, role: user.role };
 
-        res.json({ message: 'Login successful', token });
+        res.redirect('/dashboard');
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -39,7 +40,7 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
     req.session.destroy();
-    res.json({ message: 'Logged out successfully' });
-};
+    res.redirect('/login');
+}
 
 module.exports = { register, login, logout };
