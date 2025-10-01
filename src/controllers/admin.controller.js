@@ -13,7 +13,6 @@ exports.createQuestion = async (req, res) => {
         res.status(500).json(err);
     }
 };
-
 exports.updateQuestion = async (req, res) => {
     try {
         const { id } = req.params;
@@ -32,8 +31,6 @@ exports.updateQuestion = async (req, res) => {
         res.status(500).json(err);
     }
 };
-
-
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.findAllUsers();
