@@ -1,15 +1,19 @@
-function authorizeRoles(...allowedRoles) {
+const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Vous devez être connecté." });
+    console.log("REQ.USER dans authorizeRoles:", req.user); 
+    console.log("Allowed Roles:", allowedRoles);
+
+    if (!req.user || !req.user.role) {
+      return res.status(403).json({ message: "Aucun rôle trouvé" });
     }
 
     if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Accès interdit : rôle non autorisé." });
+      return res.status(403).json({ 
+        message: `Accès interdit : rôle '${req.user.role}' non autorisé.`
+      });
     }
 
     next();
   };
-}
-
+};
 module.exports = authorizeRoles;
