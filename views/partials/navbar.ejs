@@ -1,0 +1,39 @@
+<nav class="bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <a href="/" class="text-2xl font-bold text-white hover:text-blue-100 transition-colors">
+        JSQuiz-Pro
+      </a>
+      <ul class="flex space-x-1 sm:space-x-2">
+        <li>
+          <a href="/" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:bg-opacity-20 transition-all">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/dashboard" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:bg-opacity-20 transition-all">
+            Dashboard
+          </a>
+        </li>
+        <% if (typeof user !== 'undefined' && user) { %>
+          <li>
+            <a href="/api/users/logout" class="px-3 py-2 rounded-md text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors">
+              Logout
+            </a>
+          </li>
+        <% } else { %>
+          <li>
+            <a href="/login" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:bg-opacity-20 transition-all">
+              Login
+            </a>
+          </li>
+          <li>
+            <a href="/register" class="px-3 py-2 rounded-md text-sm font-medium bg-white text-blue-600 hover:bg-blue-50 transition-colors">
+              Register
+            </a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
