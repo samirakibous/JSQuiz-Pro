@@ -8,4 +8,6 @@ const adminController = require("../controllers/admin.controller");
 
 router.post('/questions', authenticateToken,authorizeRoles('admin'), adminController.createQuestion);
 router.put('/questions/:id', authenticateToken,authorizeRoles('admin'), adminController.updateQuestion);
+router.delete('/questions/:id', authenticateToken, authorizeRoles('admin'), adminController.deleteQuestion);
+
 module.exports = router;
