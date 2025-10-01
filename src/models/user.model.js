@@ -24,11 +24,9 @@ class User {
         )
         return rows[0];
     }
-
     static  async validatePassword(plainPassword, hashedPassword) {
         return await bcrypt.compare(plainPassword, hashedPassword);
     }
-
     static  async findAllUsers() {
         const [rows] = await db.execute(
             'SELECT id, username , role FROM Users'
