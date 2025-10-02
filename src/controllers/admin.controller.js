@@ -22,7 +22,7 @@ exports.updateQuestion = async (req, res) => {
 
         const [result] = await db.query(
             "UPDATE Questions SET thematique = ?, question = ?, options = ?, correctAnswers = ? WHERE questionId = ?",
-            [thematique, question, JSON.stringify(options), correctAnswers, id]
+            [thematique, question, JSON.stringify(options), JSON.stringify(correctAnswers), id]
         );
 
         if (result.affectedRows === 0) {
@@ -84,5 +84,13 @@ exports.showDashboard = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send("Erreur serveur");
+    }
+};
+exports.getQuestions = async (req, res) => {
+    try {
+        const questions = await question.getAllQuestions();
+        res.json(questions);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };

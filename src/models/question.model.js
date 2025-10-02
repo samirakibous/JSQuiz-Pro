@@ -34,6 +34,10 @@ class Questions {
         );
         return rows[0].total;
     }
+    static async getAllQuestions() {
+    const [rows] = await pool.execute('SELECT * FROM Questions');
+    return rows;
+}
 }
 
 module.exports = Questions;

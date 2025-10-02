@@ -80,8 +80,12 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Nombre de thémes</p>
-            <p class="text-3xl font-bold text-gray-800" id="totalGames"> <%= totalThemes %> </p>
+            <p class="text-sm font-medium text-gray-600 mb-1">
+              Nombre de thémes
+            </p>
+            <p class="text-3xl font-bold text-gray-800" id="totalGames">
+              <%= totalThemes %>
+            </p>
           </div>
           <div class="bg-purple-100 p-3 rounded-full">
             <svg
@@ -108,7 +112,9 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-gray-600 mb-1">Score Moyen</p>
-            <p class="text-3xl font-bold text-gray-800" id="avgScore"> <%= avgScore %> </p>
+            <p class="text-3xl font-bold text-gray-800" id="avgScore">
+              <%= avgScore %>
+            </p>
           </div>
           <div class="bg-orange-100 p-3 rounded-full">
             <svg
@@ -442,19 +448,24 @@
     }
 
     function closeQuestionModal() {
-      questionModal.classList.add("hidden");
-      questionModal.classList.remove("flex");
-    }
+    questionModal.classList.add("hidden");
+    questionModal.classList.remove("flex");
+    document.getElementById("modalTitle").textContent = "Ajouter une Question";
+    document.getElementById("questionForm").reset();
+    document.getElementById("questionId").value = "";
+}
+
 
     questionModal.addEventListener("click", (e) => {
       if (e.target === questionModal) {
         closeQuestionModal();
       }
     });
-  
-    async function saveQuestion(event) {
+
+   async function saveQuestion(event) {
     event.preventDefault();
 
+    const id = document.getElementById("questionId").value;
     const thematique = document.getElementById("questionTheme").value;
     const questionText = document.getElementById("questionText").value;
     const options = [
@@ -463,42 +474,176 @@
         document.getElementById("option3").value,
         document.getElementById("option4").value
     ];
-   const correctAnswers = [];
-   if (document.getElementById("correct1").checked) correctAnswers.push(document.getElementById("option1").value);
-   if (document.getElementById("correct2").checked) correctAnswers.push(document.getElementById("option2").value);
-   if (document.getElementById("correct3").checked) correctAnswers.push(document.getElementById("option3").value);
-   if (document.getElementById("correct4").checked) correctAnswers.push(document.getElementById("option4").value);
 
-    const data = {
-        thematique,
-        question: questionText,
-        options,
-        correctAnswers
-    };
+    const correctAnswers = [];
+    if (document.getElementById("correct1").checked) correctAnswers.push(options[0]);
+    if (document.getElementById("correct2").checked) correctAnswers.push(options[1]);
+    if (document.getElementById("correct3").checked) correctAnswers.push(options[2]);
+    if (document.getElementById("correct4").checked) correctAnswers.push(options[3]);
+
+    const data = { thematique, question: questionText, options, correctAnswers };
 
     try {
-        const res = await fetch("/admin/questions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+        const res = await fetch(id ? `/admin/questions/${id}` : "/admin/questions", {
+            method: id ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
 
         const result = await res.json();
 
         if (res.ok) {
-            alert("Question ajoutée avec succès !");
+            alert(id ? "Question modifiée avec succès !" : "Question ajoutée avec succès !");
             document.getElementById("questionForm").reset();
             closeQuestionModal();
-            // loadQuestions();
+            loadQuestions();
         } else {
-            alert(result.message || "Erreur lors de l'ajout.");
+            alert(result.message || "Erreur lors de l'opération.");
         }
     } catch (err) {
         console.error(err);
         alert("Erreur réseau !");
     }
 }
+
+
+    async function loadQuestions() {
+      try {
+        const res = await fetch("/admin/questions");
+        const questions = await res.json();
+
+        const listContainer = document.getElementById("questionsList");
+        listContainer.innerHTML = "";
+
+        questions.forEach((q) => {
+          const div = document.createElement("div");
+          div.classList.add("p-4", "bg-white", "rounded-lg", "shadow");
+
+          div.innerHTML = `
+                <p><strong>ID :</strong> ${q.questionId}</p>
+                <p><strong>Thématique :</strong> ${q.thematique}</p>
+                <p><strong>Question :</strong> ${q.question}</p>
+                <div class="flex gap-2 mt-2">
+                    <button onclick="editQuestion(${q.questionId})" class="bg-yellow-400 text-white px-3 py-1 rounded">Modifier</button>
+                    <button onclick="deleteQuestion(${q.questionId})" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+                </div>
+            `;
+
+          listContainer.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    
+    window.addEventListener("DOMContentLoaded", loadQuestions);
+    async function editQuestion(id) {
+      try {
+        const res = await fetch(`/admin/questions`);
+        const questions = await res.json();
+        const question = questions.find((q) => q.questionId === id);
+
+        if (!question) return alert("Question introuvable");
+
+        document.getElementById("modalTitle").textContent =
+          "Modifier la question";
+        document.getElementById("questionId").value = question.questionId;
+        document.getElementById("questionTheme").value = question.thematique;
+        document.getElementById("questionText").value = question.question;
+
+        const options = question.options;
+
+        document.getElementById("option1").value = options[0] || "";
+        document.getElementById("option2").value = options[1] || "";
+        document.getElementById("option3").value = options[2] || "";
+        document.getElementById("option4").value = options[3] || "";
+
+        const correctAnswers = question.correctAnswers || "[]";
+
+        document.getElementById("correct1").checked = correctAnswers.includes(
+          options[0]
+        );
+        document.getElementById("correct2").checked = correctAnswers.includes(
+          options[1]
+        );
+        document.getElementById("correct3").checked = correctAnswers.includes(
+          options[2]
+        );
+        document.getElementById("correct4").checked = correctAnswers.includes(
+          options[3]
+        );
+
+        openAddQuestionModal();
+      } catch (err) {
+        console.error(err);
+        alert("Erreur lors du chargement de la question.");
+      }
+    }
+
+    async function deleteQuestion(id) {
+    if (!confirm("Voulez-vous vraiment supprimer cette question ?")) return;
+
+    try {
+        const res = await fetch(`/admin/questions/${id}`, {
+            method: "DELETE"
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            alert(result.message || "Question supprimée avec succès !");
+            loadQuestions();
+        } else {
+            alert(result.message || "Erreur lors de la suppression.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Erreur réseau !");
+    }
+}
+
+async function filterQuestions() {
+    try {
+        const themeFilter = document.getElementById("filterTheme").value.toLowerCase();
+        const searchQuery = document.getElementById("searchQuestion").value.toLowerCase();
+
+        const res = await fetch("/admin/questions");
+        const questions = await res.json();
+
+        const filtered = questions.filter(q => {
+            const matchesTheme = q.thematique.toLowerCase().includes(themeFilter);
+            const matchesSearch = q.question.toLowerCase().includes(searchQuery);
+            return matchesTheme && matchesSearch;
+        });
+
+        const listContainer = document.getElementById("questionsList");
+        listContainer.innerHTML = "";
+
+        if (filtered.length === 0) {
+            listContainer.innerHTML = `<p class="text-gray-500">Aucune question trouvée.</p>`;
+            return;
+        }
+
+        filtered.forEach((q) => {
+            const div = document.createElement("div");
+            div.classList.add("p-4", "bg-white", "rounded-lg", "shadow");
+
+            div.innerHTML = `
+                <p><strong>ID :</strong> ${q.questionId}</p>
+                <p><strong>Thématique :</strong> ${q.thematique}</p>
+                <p><strong>Question :</strong> ${q.question}</p>
+                <div class="flex gap-2 mt-2">
+                    <button onclick="editQuestion(${q.questionId})" class="bg-yellow-400 text-white px-3 py-1 rounded">Modifier</button>
+                    <button onclick="deleteQuestion(${q.questionId})" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+                </div>
+            `;
+            listContainer.appendChild(div);
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
   </script>
 </body>

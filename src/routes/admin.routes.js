@@ -10,4 +10,5 @@ const {authenticateToken} = require("../middlewares/auth.middleware");
 router.post('/questions', authenticateToken,authorizeRoles('admin'), adminController.createQuestion);
 router.put('/questions/:id', authenticateToken,authorizeRoles('admin'), adminController.updateQuestion);
 router.delete('/questions/:id', authenticateToken, authorizeRoles('admin'), adminController.deleteQuestion);
+router.get('/questions',authenticateToken, authorizeRoles('admin'), adminController.getQuestions);
 module.exports = router;
