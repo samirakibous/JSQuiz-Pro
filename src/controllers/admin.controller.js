@@ -1,5 +1,6 @@
 const db = require("../../config/db");
 const User = require('../models/user.model');
+const question = require('../models/question.model');
 
 exports.createQuestion = async (req, res) => {
     try {
@@ -56,4 +57,24 @@ exports.deleteQuestion = async (req, res) => {
     } catch (err) {
         res.status(500).json(err);
     }
+
+exports.getAllThemes = async (req,res)=>{
+try {
+        const users = await User.findAllUsers();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+exports.showDashboard = async (req, res) => {
+    try {
+        const totalUsers = await User.countUsers(); 
+        res.render('/dashboard', { totalUsers});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+    }
+};
+
 };

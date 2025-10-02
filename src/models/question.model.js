@@ -21,6 +21,10 @@ class  Questions {
         );
         return rows[0];
     }
+       static async countThemes() {
+        const [rows] = await db.execute('SELECT COUNT(DISTINCT thematique) AS total FROM Questions');
+        return rows[0].total; 
+    }
 }
 
 module.exports = Questions;
