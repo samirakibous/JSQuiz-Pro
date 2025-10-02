@@ -32,7 +32,11 @@ const login = async (req, res) => {
         req.session.token = token;
         req.session.user = { id: user.id, username: user.username, role: user.role };
 
-        res.redirect('/dashboard');
+        if (user.role === 'admin') {
+            res.redirect('/dashboard');
+        } else {
+            res.redirect('/')
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
