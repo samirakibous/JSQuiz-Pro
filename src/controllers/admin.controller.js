@@ -57,9 +57,10 @@ exports.deleteQuestion = async (req, res) => {
     } catch (err) {
         res.status(500).json(err);
     }
+};
 
-exports.getAllThemes = async (req,res)=>{
-try {
+exports.getAllThemes = async (req, res) => {
+    try {
         const users = await User.findAllUsers();
         res.status(200).json(users);
     } catch (error) {
@@ -69,12 +70,15 @@ try {
 
 exports.showDashboard = async (req, res) => {
     try {
-        const totalUsers = await User.countUsers(); 
-        res.render('/dashboard', { totalUsers});
+        const totalUsers = await User.countUsers();
+        const thematiques = await question.getThematiques();
+        res.render('dashboard', {
+            user: req.user,
+            totalUsers,
+            thematiques
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send("Erreur serveur");
     }
-};
-
 };

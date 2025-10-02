@@ -25,6 +25,12 @@ class  Questions {
         const [rows] = await db.execute('SELECT COUNT(DISTINCT thematique) AS total FROM Questions');
         return rows[0].total; 
     }
+    static async getThematiques() {
+    const [rows] = await pool.execute(
+        'SELECT DISTINCT thematique FROM Questions'
+    );
+    return rows; 
+}
 }
 
 module.exports = Questions;

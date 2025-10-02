@@ -92,12 +92,9 @@
                     <!-- Filtres -->
                     <div class="mb-6 flex gap-4">
                         <select id="filterTheme" onchange="filterQuestions()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                            <option value="">Toutes les thématiques</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="HTML/CSS">HTML/CSS</option>
-                            <option value="Node.js">Node.js</option>
-                            <option value="MySQL">MySQL</option>
-                            <option value="React">React</option>
+                             <% thematiques.forEach(themeObj => { %>
+                             <option value="<%= themeObj.thematique %>"><%= themeObj.thematique %></option>
+                             <% }) %>
                         </select>
                         <input type="text" id="searchQuestion" onkeyup="filterQuestions()" placeholder="Rechercher une question..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     </div>
