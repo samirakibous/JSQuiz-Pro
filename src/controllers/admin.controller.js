@@ -1,13 +1,14 @@
 const db = require("../../config/db");
 const User = require('../models/user.model');
 const question = require('../models/question.model');
+const Score = require('../models/score.model');
 
 exports.createQuestion = async (req, res) => {
     try {
         const { thematique, question, options, correctAnswers } = req.body;
         const [result] = await db.query(
             "INSERT INTO Questions (thematique, question, options, correctAnswers) VALUES (?, ?, ?, ?)",
-            [thematique, question, JSON.stringify(options), correctAnswers]
+            [thematique, question, JSON.stringify(options),  JSON.stringify(correctAnswers) ]
         );
         res.status(201).json({ message: "Question ajoutée", id: result.insertId });
     } catch (err) {
@@ -72,10 +73,13 @@ exports.showDashboard = async (req, res) => {
     try {
         const totalUsers = await User.countUsers();
         const thematiques = await question.getThematiques();
+        const totalQuestions = await question.countQuestions();
+        const totalThemes = await question.countThemes();
+        const avgScore = await Score.getAverageScore();
         res.render('dashboard', {
             user: req.user,
             totalUsers,
-            thematiques
+            thematiques,totalQuestions,totalThemes,avgScore
         });
     } catch (error) {
         console.error(error);

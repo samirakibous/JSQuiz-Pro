@@ -5,232 +5,500 @@
   <%- include('./partials/navbar') %>
 
   <main class="container mx-auto px-4 py-8 max-w-7xl">
-        <!-- En-tête du Dashboard Admin -->
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Dashboard Admin</h1>
-            <p class="text-gray-600">Gérez les questions, visualisez les statistiques et suivez les performances des utilisateurs.</p>
-        </div>
-
-        <!-- Statistiques Globales -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Total Utilisateurs -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Utilisateurs</p>
-                        <p class="text-3xl font-bold text-gray-800" id="totalUsers"><%= totalUsers %></p>
-                    </div>
-                    <div class="bg-blue-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total Questions -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Questions</p>
-                        <p class="text-3xl font-bold text-gray-800" id="totalQuestions">0</p>
-                    </div>
-                    <div class="bg-green-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Parties Jouées -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Parties Jouées</p>
-                        <p class="text-3xl font-bold text-gray-800" id="totalGames">0</p>
-                    </div>
-                    <div class="bg-purple-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Score Moyen Global -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Score Moyen</p>
-                        <p class="text-3xl font-bold text-gray-800" id="avgScore">0%</p>
-                    </div>
-                    <div class="bg-orange-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Section principale (2/3) - Gestion des Questions -->
-            <div class="lg:col-span-2 space-y-8">
-                <!-- CRUD Questions -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Gestion des Questions</h2>
-                        <button onclick="openAddQuestionModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Ajouter une question
-                        </button>
-                    </div>
-
-                    <!-- Filtres -->
-                    <div class="mb-6 flex gap-4">
-                        <select id="filterTheme" onchange="filterQuestions()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                             <% thematiques.forEach(themeObj => { %>
-                             <option value="<%= themeObj.thematique %>"><%= themeObj.thematique %></option>
-                             <% }) %>
-                        </select>
-                        <input type="text" id="searchQuestion" onkeyup="filterQuestions()" placeholder="Rechercher une question..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                    </div>
-
-                    <!-- Liste des Questions -->
-                    <div id="questionsList" class="space-y-4">
-                        <!-- Les questions seront injectées ici -->
-                    </div>
-                </div>
-
-                <!-- Scores des Utilisateurs -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Scores des Utilisateurs</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-gray-200">
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Utilisateur</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Date</th>
-                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Thématique</th>
-                                    <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700">Score</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userScoresTable">
-                                <!-- Les scores seront injectés ici -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar (1/3) -->
-            <div class="space-y-8">
-                <!-- Statistiques par Thématique -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">Stats par Thématique</h2>
-                    <div id="themeStats" class="space-y-3">
-                        <!-- Les stats seront injectées ici -->
-                    </div>
-                </div>
-
-                <!-- Utilisateurs Actifs -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">Utilisateurs Actifs</h2>
-                    <div id="activeUsers" class="space-y-3">
-                        <!-- Les utilisateurs seront injectés ici -->
-                    </div>
-                </div>
-
-                <!-- Actions Rapides -->
-                <div class="bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl shadow-md p-6 text-white">
-                    <h3 class="text-xl font-bold mb-4">Actions Rapides</h3>
-                    <div class="space-y-3">
-                        <button onclick="exportData()" class="block w-full bg-white text-slate-800 text-center py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                            📊 Exporter les données
-                        </button>
-                        <button onclick="viewReports()" class="block w-full bg-slate-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-slate-500 transition-colors">
-                            📈 Rapports détaillés
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal Ajout/Édition Question -->
-    <div id="questionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800" id="modalTitle">Ajouter une Question</h3>
-                <button onclick="closeQuestionModal()" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <form id="questionForm" onsubmit="saveQuestion(event)" class="space-y-4">
-                <input type="hidden" id="questionId">
-                
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Thématique</label>
-                    <select id="questionTheme" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="">Sélectionner une thématique</option>
-                        <option value="JavaScript">JavaScript</option>
-                        <option value="HTML/CSS">HTML/CSS</option>
-                        <option value="Node.js">Node.js</option>
-                        <option value="MySQL">MySQL</option>
-                        <option value="React">React</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Question</label>
-                    <textarea id="questionText" required rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Options (4 réponses)</label>
-                    <input type="text" id="option1" required placeholder="Option 1" class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                    <input type="text" id="option2" required placeholder="Option 2" class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                    <input type="text" id="option3" required placeholder="Option 3" class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                    <input type="text" id="option4" required placeholder="Option 4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Réponse(s) correcte(s)</label>
-                    <div class="space-y-2">
-                        <label class="flex items-center">
-                            <input type="checkbox" id="correct1" class="w-4 h-4 text-indigo-600 rounded">
-                            <span class="ml-2 text-sm text-gray-700">Option 1</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" id="correct2" class="w-4 h-4 text-indigo-600 rounded">
-                            <span class="ml-2 text-sm text-gray-700">Option 2</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" id="correct3" class="w-4 h-4 text-indigo-600 rounded">
-                            <span class="ml-2 text-sm text-gray-700">Option 3</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" id="correct4" class="w-4 h-4 text-indigo-600 rounded">
-                            <span class="ml-2 text-sm text-gray-700">Option 4</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="flex gap-4 pt-4">
-                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
-                        Enregistrer
-                    </button>
-                    <button type="button" onclick="closeQuestionModal()" class="px-6 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
-                        Annuler
-                    </button>
-                </div>
-            </form>
-        </div>
+    <!-- En-tête du Dashboard Admin -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Dashboard Admin</h1>
+      <p class="text-gray-600">
+        Gérez les questions, visualisez les statistiques et suivez les
+        performances des utilisateurs.
+      </p>
     </div>
+
+    <!-- Statistiques Globales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Utilisateurs -->
+      <div
+        class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 mb-1">Utilisateurs</p>
+            <p class="text-3xl font-bold text-gray-800" id="totalUsers">
+              <%= totalUsers %>
+            </p>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-full">
+            <svg
+              class="w-8 h-8 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Questions -->
+      <div
+        class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 mb-1">Questions</p>
+            <p class="text-3xl font-bold text-gray-800" id="totalQuestions">
+              <%= totalQuestions %>
+            </p>
+          </div>
+          <div class="bg-green-100 p-3 rounded-full">
+            <svg
+              class="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Les thémes -->
+      <div
+        class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 mb-1">Nombre de thémes</p>
+            <p class="text-3xl font-bold text-gray-800" id="totalGames"> <%= totalThemes %> </p>
+          </div>
+          <div class="bg-purple-100 p-3 rounded-full">
+            <svg
+              class="w-8 h-8 text-purple-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score Moyen Global -->
+      <div
+        class="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 mb-1">Score Moyen</p>
+            <p class="text-3xl font-bold text-gray-800" id="avgScore"> <%= avgScore %> </p>
+          </div>
+          <div class="bg-orange-100 p-3 rounded-full">
+            <svg
+              class="w-8 h-8 text-orange-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Section principale (2/3) - Gestion des Questions -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- CRUD Questions -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">
+              Gestion des Questions
+            </h2>
+            <button
+              id="openQModal"
+              onclick="openAddQuestionModal()"
+              class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              Ajouter une question
+            </button>
+          </div>
+
+          <!-- Filtres -->
+          <div class="mb-6 flex gap-4">
+            <select
+              id="filterTheme"
+              onchange="filterQuestions()"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <% thematiques.forEach(themeObj => { %>
+              <option value="<%= themeObj.thematique %>">
+                <%= themeObj.thematique %>
+              </option>
+              <% }) %>
+            </select>
+            <input
+              type="text"
+              id="searchQuestion"
+              onkeyup="filterQuestions()"
+              placeholder="Rechercher une question..."
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+
+          <!-- Liste des Questions -->
+          <div id="questionsList" class="space-y-4">
+            <!-- Les questions seront injectées ici -->
+          </div>
+        </div>
+
+        <!-- Scores des Utilisateurs -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            Scores des Utilisateurs
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th
+                    class="text-left py-3 px-4 text-sm font-semibold text-gray-700"
+                  >
+                    Utilisateur
+                  </th>
+                  <th
+                    class="text-left py-3 px-4 text-sm font-semibold text-gray-700"
+                  >
+                    Date
+                  </th>
+                  <th
+                    class="text-left py-3 px-4 text-sm font-semibold text-gray-700"
+                  >
+                    Thématique
+                  </th>
+                  <th
+                    class="text-center py-3 px-4 text-sm font-semibold text-gray-700"
+                  >
+                    Score
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="userScoresTable">
+                <!-- Les scores seront injectés ici -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar (1/3) -->
+      <div class="space-y-8">
+        <!-- Statistiques par Thématique -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">
+            Stats par Thématique
+          </h2>
+          <div id="themeStats" class="space-y-3">
+            <!-- Les stats seront injectées ici -->
+          </div>
+        </div>
+
+        <!-- Utilisateurs Actifs -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">
+            Utilisateurs Actifs
+          </h2>
+          <div id="activeUsers" class="space-y-3">
+            <!-- Les utilisateurs seront injectés ici -->
+          </div>
+        </div>
+
+        <!-- Actions Rapides -->
+        <div
+          class="bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl shadow-md p-6 text-white"
+        >
+          <h3 class="text-xl font-bold mb-4">Actions Rapides</h3>
+          <div class="space-y-3">
+            <button
+              onclick="exportData()"
+              class="block w-full bg-white text-slate-800 text-center py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              📊 Exporter les données
+            </button>
+            <button
+              onclick="viewReports()"
+              class="block w-full bg-slate-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-slate-500 transition-colors"
+            >
+              📈 Rapports détaillés
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Ajout/Édition Question -->
+  <div
+    id="questionModal"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+  >
+    <div
+      class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+    >
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-800" id="modalTitle">
+          Ajouter une Question
+        </h3>
+        <button
+          onclick="closeQuestionModal()"
+          class="text-gray-400 hover:text-gray-600"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <form id="questionForm" onsubmit="saveQuestion(event)" class="space-y-4">
+        <input type="hidden" id="questionId" />
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2"
+            >Thématique</label
+          >
+          <input
+            type="text"
+            id="questionTheme"
+            list="themesList"
+            required
+            placeholder="Choisir ou créer une thématique..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+          <datalist id="themesList">
+            <% thematiques.forEach(themeObj => { %>
+            <option value="<%= themeObj.thematique %>">
+              <%= themeObj.thematique %>
+            </option>
+            <% }) %>
+          </datalist>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2"
+            >Question</label
+          >
+          <textarea
+            id="questionText"
+            required
+            rows="3"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2"
+            >Options (4 réponses)</label
+          >
+          <input
+            type="text"
+            id="option1"
+            required
+            placeholder="Option 1"
+            class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+          <input
+            type="text"
+            id="option2"
+            required
+            placeholder="Option 2"
+            class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+          <input
+            type="text"
+            id="option3"
+            required
+            placeholder="Option 3"
+            class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+          <input
+            type="text"
+            id="option4"
+            required
+            placeholder="Option 4"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2"
+            >Réponse(s) correcte(s)</label
+          >
+          <div class="space-y-2">
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                id="correct1"
+                class="w-4 h-4 text-indigo-600 rounded"
+              />
+              <span class="ml-2 text-sm text-gray-700">Option 1</span>
+            </label>
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                id="correct2"
+                class="w-4 h-4 text-indigo-600 rounded"
+              />
+              <span class="ml-2 text-sm text-gray-700">Option 2</span>
+            </label>
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                id="correct3"
+                class="w-4 h-4 text-indigo-600 rounded"
+              />
+              <span class="ml-2 text-sm text-gray-700">Option 3</span>
+            </label>
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                id="correct4"
+                class="w-4 h-4 text-indigo-600 rounded"
+              />
+              <span class="ml-2 text-sm text-gray-700">Option 4</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex gap-4 pt-4">
+          <button
+            type="submit"
+            class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+          >
+            Enregistrer
+          </button>
+          <button
+            type="button"
+            onclick="closeQuestionModal()"
+            class="px-6 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    const questionModal = document.getElementById("questionModal");
+
+    function openAddQuestionModal() {
+      questionModal.classList.remove("hidden");
+      questionModal.classList.add("flex");
+    }
+
+    function closeQuestionModal() {
+      questionModal.classList.add("hidden");
+      questionModal.classList.remove("flex");
+    }
+
+    questionModal.addEventListener("click", (e) => {
+      if (e.target === questionModal) {
+        closeQuestionModal();
+      }
+    });
+  
+    async function saveQuestion(event) {
+    event.preventDefault();
+
+    const thematique = document.getElementById("questionTheme").value;
+    const questionText = document.getElementById("questionText").value;
+    const options = [
+        document.getElementById("option1").value,
+        document.getElementById("option2").value,
+        document.getElementById("option3").value,
+        document.getElementById("option4").value
+    ];
+   const correctAnswers = [];
+   if (document.getElementById("correct1").checked) correctAnswers.push(document.getElementById("option1").value);
+   if (document.getElementById("correct2").checked) correctAnswers.push(document.getElementById("option2").value);
+   if (document.getElementById("correct3").checked) correctAnswers.push(document.getElementById("option3").value);
+   if (document.getElementById("correct4").checked) correctAnswers.push(document.getElementById("option4").value);
+
+    const data = {
+        thematique,
+        question: questionText,
+        options,
+        correctAnswers
+    };
+
+    try {
+        const res = await fetch("/admin/questions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            alert("Question ajoutée avec succès !");
+            document.getElementById("questionForm").reset();
+            closeQuestionModal();
+            // loadQuestions();
+        } else {
+            alert(result.message || "Erreur lors de l'ajout.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Erreur réseau !");
+    }
+}
+  </script>
 </body>

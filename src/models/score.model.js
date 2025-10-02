@@ -23,5 +23,11 @@ class Score {
         );
         return rows;
     }
+    static async getAverageScore() {
+    const [rows] = await pool.execute(
+        'SELECT AVG(score) AS average FROM Scores'
+    );
+    return rows[0].average || 0 ;
+}
 }
 module.exports = Score;
