@@ -43,4 +43,15 @@ const logout = (req, res) => {
     res.redirect('/login');
 }
 
-module.exports = { register, login, logout };
+const showDashboard = async (req, res) => {
+    try {
+        const totalUsers = await User.countUsers(); 
+        res.render('dashboard', { totalUsers});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+    }
+};
+
+
+module.exports = { register, login, logout ,showDashboard };
