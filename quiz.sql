@@ -14,7 +14,7 @@ CREATE TABLE Questions (
     thematique VARCHAR(255) NOT NULL,
     question TEXT NOT NULL,
     options JSON NOT NULL,
-    correctAnswers VARCHAR(255) NOT NULL
+    correctAnswers JSON
 );
 
 CREATE TABLE Scores (

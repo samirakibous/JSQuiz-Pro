@@ -1,0 +1,183 @@
+<%- include('partials/header') %>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('partials/navbar') %>
+
+    <div class="container mx-auto px-4 py-8">
+        <div id="quiz-container" class="max-w-2xl mx-auto">
+            <!-- Loading State -->
+            <div id="loading" class="text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Chargement du quiz...</p>
+            </div>
+
+            <!-- Quiz Content -->
+            <div id="quiz-content" class="hidden">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold text-blue-600">Quiz: <%= thematique %></h2>
+                            <span id="progress" class="text-sm text-gray-600"></span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="progress-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div id="question-container">
+                        <h3 id="question-text" class="text-lg font-semibold mb-4"></h3>
+                        <div id="answers" class="space-y-3"></div>
+                    </div>
+
+                    <button id="next-btn" class="hidden mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                        Question suivante
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="hidden bg-white rounded-lg shadow-lg p-6 text-center">
+                <div class="mb-6">
+                    <i class="fas fa-trophy text-6xl text-yellow-500 mb-4"></i>
+                    <h2 class="text-2xl font-bold text-green-600 mb-4">Quiz terminé !</h2>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                    <div class="text-4xl font-bold text-blue-600 mb-2" id="final-score"></div>
+                    <p class="text-gray-600 mb-2" id="score-text"></p>
+                    <p class="text-sm text-gray-500" id="thematique-text"></p>
+                </div>
+                <div class="space-x-4">
+                    <a href="/" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors">
+                        Retour à l'accueil
+                    </a>
+                    <button onclick="location.reload()" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
+                        Recommencer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const thematique = '<%= thematique %>';
+        let currentQuiz = null;
+
+        async function startQuiz() {
+            try {
+                const response = await fetch(`/api/quiz/start/${thematique}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error('Erreur lors du démarrage du quiz');
+
+                currentQuiz = await response.json();
+                console.log('Quiz data:', currentQuiz);
+                showQuestion();
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('quiz-content').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur: ' + error.message);
+            }
+        }
+
+        function showQuestion() {
+            const question = currentQuiz.currentQuestion || currentQuiz.nextQuestion;
+
+            if (!question) {
+                console.error('No question found in currentQuiz:', currentQuiz);
+                alert('Erreur: Aucune question trouvée');
+                return;
+            }
+
+            console.log('Current question:', question);
+
+            document.getElementById('question-text').textContent = question.question || 'Question non disponible';
+
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+
+            let options = [];
+            try {
+                if (typeof question.options === 'string') {
+                    options = JSON.parse(question.options);
+                } else if (Array.isArray(question.options)) {
+                    options = question.options;
+                }
+            } catch (e) {
+                console.error('Error parsing options:', e);
+                options = [];
+            }
+
+            console.log('Parsed options:', options);
+
+            if (options.length === 0) {
+                answersContainer.innerHTML = '<p class="text-red-500">Aucune option disponible</p>';
+                return;
+            }
+
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'w-full text-left p-3 border border-gray-300 rounded hover:bg-blue-50 transition-colors';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(option);
+                answersContainer.appendChild(button);
+            });
+
+            updateProgress();
+        }
+
+        async function selectAnswer(answer) {
+            const buttons = document.querySelectorAll('#answers button');
+            buttons.forEach(btn => btn.disabled = true);
+
+            try {
+                const response = await fetch('/api/quiz/answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ answer })
+                });
+
+                const result = await response.json();
+                console.log('Answer result:', result);
+
+                if (result.completed) {
+                    showResults(result);
+                } else {
+                    currentQuiz = result;
+                    document.getElementById('next-btn').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                alert('Erreur: ' + error.message);
+            }
+        }
+
+        function nextQuestion() {
+            document.getElementById('next-btn').classList.add('hidden');
+            showQuestion();
+        }
+
+        function showResults(result) {
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('final-score').textContent = `${result.score}/${result.totalQuestions}`;
+            document.getElementById('score-text').textContent = `Vous avez obtenu ${result.percentage}% de bonnes réponses`;
+            document.getElementById('thematique-text').textContent = `Thématique: ${result.thematique}`;
+        }
+
+        function updateProgress() {
+            if (!currentQuiz) return;
+            const current = (currentQuiz.currentIndex || 0) + 1;
+            const total = currentQuiz.totalQuestions;
+            document.getElementById('progress').textContent = `Question ${current}/${total}`;
+            document.getElementById('progress-bar').style.width = `${(current / total) * 100}%`;
+        }
+
+        document.getElementById('next-btn').onclick = nextQuestion;
+        startQuiz();
+    </script>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

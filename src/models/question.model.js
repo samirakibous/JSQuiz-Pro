@@ -16,7 +16,7 @@ class Questions {
     }
     static async findById(id) {
         const [rows] = await pool.execute(
-            'SELECT * FROM Questions WHERE questionID = ?'
+            'SELECT * FROM Questions WHERE questionID = ?',
             [id]
         );
         return rows[0];

@@ -3,10 +3,10 @@ const pool = require('../../config/db')
 class Score {
     static async create({ user_id, thematique, score }) {
         const [result] = await pool.execute(
-            'INSERT INTO Scores (users_id, thematique, score) VALUES (?,?,?)',
+            'INSERT INTO Scores (user_id, thematique, score) VALUES (?,?,?)',
             [user_id, thematique, score]
         );
-        return result.insertID;
+        return result.insertId;
     }
     static async getByUser(user_id) {
         const [rows] = await pool.execute(
@@ -23,6 +23,36 @@ class Score {
         );
         return rows;
     }
+    static async getUserAverage(user_id) {
+        const [rows] = await pool.execute(
+            'SELECT AVG(score) as average FROM Scores WHERE user_id = ?',
+            [user_id]
+        );
+        return rows[0]?.average || 0;
+    }
+    static async getLastScore(user_id) {
+        const [rows] = await pool.execute(
+            'SELECT * FROM Scores WHERE user_id = ? ORDER BY date_played DESC LIMIT 1',
+            [user_id]
+        );
+        return rows[0];
+    }
+    static async getTopUsers(limit = 5) {
+        try {
+            console.log('Exécution de getTopUsers avec limit:', limit);
+            const [rows] = await pool.execute(
+                'SELECT u.username, COALESCE(AVG(s.score), 0) as average FROM Users u LEFT JOIN Scores s ON u.id = s.user_id GROUP BY u.id, u.username ORDER BY average DESC LIMIT ?',
+                [limit]
+            );
+            console.log('Résultat de getTopUsers:', rows);
+            return rows;
+        } catch (error) {
+            console.error('Erreur dans getTopUsers:', error);
+            return [];
+        }
+    }
+
+
     static async getAverageScore() {
         const [rows] = await pool.execute(
             'SELECT AVG(score) AS average FROM Scores'
