@@ -65,17 +65,23 @@ const submitAnswer = async (req, res) => {
         quiz.currentIndex++;
 
         if (quiz.currentIndex >= quiz.questions.length) {
-            const finalScore = await Score.create({
-                user_id: req.user.id,
-                thematique: quiz.thematique,
-                score: quiz.score
-            });
+            // Sauvegarder le score dans la base de données
+            try {
+                await Score.create({
+                    user_id: req.user.id,
+                    thematique: quiz.thematique,
+                    score: quiz.score
+                });
+            } catch (scoreError) {
+                console.error('Erreur sauvegarde score:', scoreError);
+            }
 
             const result = {
                 completed: true,
                 score: quiz.score,
                 totalQuestions: quiz.questions.length,
-                percentage: Math.round((quiz.score / quiz.questions.length) * 100)
+                percentage: Math.round((quiz.score / quiz.questions.length) * 100),
+                thematique: quiz.thematique
             };
 
             delete req.session.quiz;
@@ -93,4 +99,7 @@ const submitAnswer = async (req, res) => {
     }
 };
 
-module.exports = { startQuiz, getQuestion, submitAnswer };
+module.exports = { startQuiz, submitAnswer, getQuestion };
+
+
+

@@ -3,10 +3,10 @@ const pool = require('../../config/db')
 class Score {
     static async create({user_id, thematique, score}) {
         const [result] = await pool.execute(
-            'INSERT INTO Scores (users_id, thematique, score) VALUES (?,?,?)',
+            'INSERT INTO Scores (user_id, thematique, score) VALUES (?,?,?)',
             [user_id, thematique, score]
         );
-        return result.insertID;
+        return result.insertId;
     }
     static  async getByUser(user_id) {
         const [rows] = await pool.execute(
