@@ -1,7 +1,7 @@
 const {verifyToken} = require('../utils/jwt');
 
 const authenticateToken = (req, res, next) => {
-    // const token = req.session?.token || req.headers['authorization']?.split(''[1]);
+
     const token = req.session?.token || req.headers['authorization']?.split(' ')[1];
 
     if (!token) {

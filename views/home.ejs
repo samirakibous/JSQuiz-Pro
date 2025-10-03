@@ -8,6 +8,55 @@
             <p class="text-gray-600">Testez vos connaissances en développement web</p>
         </div>
 
+        <% if (user && userStats) { %>
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <!-- Partie gauche: Informations utilisateur -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-4">Mes informations</h3>
+                <div class="space-y-2">
+                    <p><strong>Utilisateur:</strong> <%= userStats.username %></p>
+                    <p><strong>Points moyens:</strong> <%= userStats.average %></p>
+                </div>
+            </div>
+
+            <!-- Partie droite: Dernier score et Top 5 -->
+            <div class="space-y-6">
+                <!-- Dernier score -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">Dernier score</h3>
+                    <% if (lastScore) { %>
+                        <p><strong>Thématique:</strong> <%= lastScore.thematique %></p>
+                        <p><strong>Score:</strong> <%= lastScore.score %></p>
+                        <p><strong>Date:</strong> <%= new Date(lastScore.date_played).toLocaleDateString() %></p>
+                    <% } else { %>
+                        <p>Aucun score enregistré</p>
+                    <% } %>
+                </div>
+
+<!-- Top 5 utilisateurs -->
+<!-- <div class="bg-white rounded-lg shadow-md p-6"> -->
+<!--     <h3 class="text-xl font-semibold mb-4">Top 5 utilisateurs</h3> -->
+<!--     <p>Debug - topUsers: <%= JSON.stringify(topUsers) %></p> -->
+<!--     <p>Debug - topUsers.length: <%= topUsers ? topUsers.length : 'undefined' %></p> -->
+
+<!--     <% if (topUsers && topUsers.length > 0) { %> -->
+<!--         <ol class="space-y-2"> -->
+<!--             <% topUsers.forEach((topUser, index) => { %> -->
+<!--                 <li class="flex justify-between"> -->
+<!--                     <span><%= index + 1 %>. <%= topUser.username %></span> -->
+<!--                     <span><%= Math.round(topUser.average * 100) / 100 %></span> -->
+<!--                 </li> -->
+<!--             <% }) %> -->
+<!--         </ol> -->
+<!--     <% } else { %> -->
+<!--         <p>Aucun classement disponible</p> -->
+<!--     <% } %> -->
+<!-- </div> -->
+
+            </div>
+        </div>
+        <% } %>
+
         <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl font-semibold mb-6 text-center">Choisissez une thématique</h2>
 
