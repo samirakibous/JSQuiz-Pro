@@ -5,8 +5,7 @@ const quizRoutes = require('./quiz.routes');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const Question = require('../models/question.model');
 const Score = require('../models/score.model');
-
-
+const { showDashboard } = require('../controllers/admin.controller');
 const router = express.Router();
 
 router.use('/api/users', userRoutes);
@@ -64,8 +63,10 @@ router.get('/register', (req, res) => {
     res.render('users/register', { user: req.user || null });
 });
 
-router.get('/dashboard', authenticateToken, (req, res) => {
-    res.render('dashboard', { user: req.user });
-});
+// router.get('/dashboard', authenticateToken, (req, res) => {
+//     res.render('dashboard', { user: req.user });
+// });
+
+router.get('/dashboard', authenticateToken, showDashboard);
 
 module.exports = router;

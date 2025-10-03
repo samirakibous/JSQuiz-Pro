@@ -33,6 +33,10 @@ class User {
         );
         return rows;
     }
+     static async countUsers() {
+        const [rows] = await db.execute('SELECT COUNT(*) AS total FROM users');
+        return rows[0].total; 
+    }
 
 }
 module.exports = User;
