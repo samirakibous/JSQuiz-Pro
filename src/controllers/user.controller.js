@@ -47,4 +47,4 @@ const logout = (req, res) => {
     res.redirect('/login');
 }
 
-module.exports = { register, login, logout };
+module.exports = { register, login, logout  };

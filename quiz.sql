@@ -25,3 +25,5 @@ CREATE TABLE Scores (
     date_played DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
+ALTER TABLE Questions 
+MODIFY correctAnswers JSON;

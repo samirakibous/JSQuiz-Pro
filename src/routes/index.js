@@ -2,6 +2,7 @@ const express = require('express');
 const userRoutes = require('./user.routes');
 const adminRoutes = require('./admin.routes');
 const { authenticateToken } = require('../middlewares/auth.middleware');
+const { showDashboard } = require('../controllers/admin.controller');
 const  Question = require('../models/question.model')
 
 const router = express.Router();
@@ -32,8 +33,10 @@ router.get('/register', (req, res) => {
     res.render('users/register', {user: req.user || null });
 });
 
-router.get('/dashboard', authenticateToken, (req, res) => {
-    res.render('dashboard', { user: req.user });
-});
+// router.get('/dashboard', authenticateToken, (req, res) => {
+//     res.render('dashboard', { user: req.user });
+// });
+
+router.get('/dashboard', authenticateToken, showDashboard);
 
 module.exports = router;
