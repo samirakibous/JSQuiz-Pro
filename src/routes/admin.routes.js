@@ -11,4 +11,5 @@ router.post('/questions', authenticateToken,authorizeRoles('admin'), adminContro
 router.put('/questions/:id', authenticateToken,authorizeRoles('admin'), adminController.updateQuestion);
 router.delete('/questions/:id', authenticateToken, authorizeRoles('admin'), adminController.deleteQuestion);
 router.get('/questions',authenticateToken, authorizeRoles('admin'), adminController.getQuestions);
+router.get("/scores/details",authenticateToken, authorizeRoles('admin'), adminController.getUserScoreDetails);
 module.exports = router;

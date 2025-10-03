@@ -76,10 +76,15 @@ exports.showDashboard = async (req, res) => {
         const totalQuestions = await question.countQuestions();
         const totalThemes = await question.countThemes();
         const avgScore = await Score.getAverageScore();
+
+        const userScores = await Score.getAllScores();
+        const themeStats = await Score.countGamesByTheme();
+        const evolutionStats = await Score.getGamesEvolution();
+        console.log(await Score.getGamesEvolution());
         res.render('dashboard', {
             user: req.user,
             totalUsers,
-            thematiques,totalQuestions,totalThemes,avgScore
+            thematiques,totalQuestions,totalThemes,avgScore,userScores,themeStats,evolutionStats
         });
     } catch (error) {
         console.error(error);
@@ -92,5 +97,18 @@ exports.getQuestions = async (req, res) => {
         res.json(questions);
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+    
+};
+
+exports.getUserScoreDetails = async (req, res) => {
+    const { userId, thematique, date } = req.query;
+
+    try {
+        const details = await Score.getUserScoreDetails(userId, thematique, date);
+        res.json(details);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
     }
 };
