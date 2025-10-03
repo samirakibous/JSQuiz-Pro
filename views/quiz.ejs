@@ -40,13 +40,11 @@
                     <i class="fas fa-trophy text-6xl text-yellow-500 mb-4"></i>
                     <h2 class="text-2xl font-bold text-green-600 mb-4">Quiz terminé !</h2>
                 </div>
-
                 <div class="bg-gray-50 rounded-lg p-6 mb-6">
                     <div class="text-4xl font-bold text-blue-600 mb-2" id="final-score"></div>
                     <p class="text-gray-600 mb-2" id="score-text"></p>
                     <p class="text-sm text-gray-500" id="thematique-text"></p>
                 </div>
-
                 <div class="space-x-4">
                     <a href="/" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors">
                         Retour à l'accueil
@@ -54,9 +52,6 @@
                     <button onclick="location.reload()" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
                         Recommencer
                     </button>
-                    <a href="/dashboard" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-colors">
-                        Mes scores
-                    </a>
                 </div>
             </div>
         </div>
@@ -76,7 +71,7 @@
                 if (!response.ok) throw new Error('Erreur lors du démarrage du quiz');
 
                 currentQuiz = await response.json();
-                console.log('Quiz data:', currentQuiz); // Debug
+                console.log('Quiz data:', currentQuiz);
                 showQuestion();
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('quiz-content').classList.remove('hidden');
@@ -88,16 +83,38 @@
 
         function showQuestion() {
             const question = currentQuiz.currentQuestion || currentQuiz.nextQuestion;
-            console.log('Current question:', question); // Debug
 
-            document.getElementById('question-text').textContent = question.question;
+            if (!question) {
+                console.error('No question found in currentQuiz:', currentQuiz);
+                alert('Erreur: Aucune question trouvée');
+                return;
+            }
+
+            console.log('Current question:', question);
+
+            document.getElementById('question-text').textContent = question.question || 'Question non disponible';
 
             const answersContainer = document.getElementById('answers');
             answersContainer.innerHTML = '';
 
-            // Les options sont dans un array JSON
-            const options = question.options;
-            console.log('Options:', options); // Debug
+            let options = [];
+            try {
+                if (typeof question.options === 'string') {
+                    options = JSON.parse(question.options);
+                } else if (Array.isArray(question.options)) {
+                    options = question.options;
+                }
+            } catch (e) {
+                console.error('Error parsing options:', e);
+                options = [];
+            }
+
+            console.log('Parsed options:', options);
+
+            if (options.length === 0) {
+                answersContainer.innerHTML = '<p class="text-red-500">Aucune option disponible</p>';
+                return;
+            }
 
             options.forEach((option, index) => {
                 const button = document.createElement('button');
@@ -122,6 +139,7 @@
                 });
 
                 const result = await response.json();
+                console.log('Answer result:', result);
 
                 if (result.completed) {
                     showResults(result);
@@ -130,6 +148,7 @@
                     document.getElementById('next-btn').classList.remove('hidden');
                 }
             } catch (error) {
+                console.error('Error submitting answer:', error);
                 alert('Erreur: ' + error.message);
             }
         }
@@ -148,6 +167,7 @@
         }
 
         function updateProgress() {
+            if (!currentQuiz) return;
             const current = (currentQuiz.currentIndex || 0) + 1;
             const total = currentQuiz.totalQuestions;
             document.getElementById('progress').textContent = `Question ${current}/${total}`;

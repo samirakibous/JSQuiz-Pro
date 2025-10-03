@@ -28,24 +28,6 @@ const startQuiz = async (req, res) => {
     }
 };
 
-const getQuestion = (req, res) => {
-    const quiz = req.session.quiz;
-    if (!quiz) {
-        return res.status(400).json({ error: 'Aucun quiz en cours' });
-    }
-
-    const currentQuestion = quiz.questions[quiz.currentIndex];
-    if (!currentQuestion) {
-        return res.status(404).json({ error: 'Question non trouvée' });
-    }
-
-    res.json({
-        question: currentQuestion,
-        currentIndex: quiz.currentIndex,
-        totalQuestions: quiz.questions.length
-    });
-};
-
 const submitAnswer = async (req, res) => {
     try {
         const { answer } = req.body;
@@ -58,20 +40,31 @@ const submitAnswer = async (req, res) => {
         const currentQuestion = quiz.questions[quiz.currentIndex];
         quiz.questions[quiz.currentIndex].userAnswer = answer;
 
-        if (answer === currentQuestion.correctAnswers) {
+        console.log('User answer:', answer);
+        console.log('Correct answer:', currentQuestion.correctAnswers);
+        console.log('Type of correctAnswers:', typeof currentQuestion.correctAnswers);
+
+        // Gérer différents types de correctAnswers
+        let correctAnswer = currentQuestion.correctAnswers;
+        if (typeof correctAnswer !== 'string') {
+            correctAnswer = String(correctAnswer);
+        }
+
+        if (answer && correctAnswer && answer.trim() === correctAnswer.trim()) {
             quiz.score++;
+            console.log('Score incremented! New score:', quiz.score);
         }
 
         quiz.currentIndex++;
 
         if (quiz.currentIndex >= quiz.questions.length) {
-            // Sauvegarder le score dans la base de données
             try {
                 await Score.create({
                     user_id: req.user.id,
                     thematique: quiz.thematique,
                     score: quiz.score
                 });
+                console.log('Final score saved:', quiz.score);
             } catch (scoreError) {
                 console.error('Erreur sauvegarde score:', scoreError);
             }
@@ -99,7 +92,4 @@ const submitAnswer = async (req, res) => {
     }
 };
 
-module.exports = { startQuiz, submitAnswer, getQuestion };
-
-
-
+module.exports = { startQuiz, submitAnswer };
