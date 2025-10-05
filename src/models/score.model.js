@@ -42,8 +42,13 @@ class Score {
         try {
             console.log('Exécution de getTopUsers avec limit:', limit);
             const [rows] = await pool.execute(
-                'SELECT u.username, COALESCE(AVG(s.score), 0) as average FROM Users u LEFT JOIN Scores s ON u.id = s.user_id GROUP BY u.id, u.username ORDER BY average DESC LIMIT ?',
-                [limit]
+                `SELECT u.username, COALESCE(AVG(s.score), 0) as average 
+             FROM Users u 
+             LEFT JOIN Scores s ON u.id = s.user_id 
+             GROUP BY u.id, u.username 
+             ORDER BY average DESC 
+             LIMIT ${parseInt(limit)}`,
+                []
             );
             console.log('Résultat de getTopUsers:', rows);
             return rows;
