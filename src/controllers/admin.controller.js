@@ -59,7 +59,6 @@ exports.deleteQuestion = async (req, res) => {
         res.status(500).json(err);
     }
 };
-
 exports.getAllThemes = async (req, res) => {
     try {
         const users = await User.findAllUsers();
@@ -68,7 +67,6 @@ exports.getAllThemes = async (req, res) => {
         res.status(500).json(error);
     }
 }
-
 exports.showDashboard = async (req, res) => {
     try {
         const totalUsers = await User.countUsers();
@@ -100,7 +98,6 @@ exports.getQuestions = async (req, res) => {
     }
     
 };
-
 exports.getUserScoreDetails = async (req, res) => {
     const { userId, thematique, date } = req.query;
 

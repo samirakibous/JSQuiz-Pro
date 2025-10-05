@@ -5,16 +5,20 @@
         JSQuiz-Pro
       </a>
       <ul class="flex space-x-1 sm:space-x-2">
+        <% if (typeof user !== 'undefined' && user && (user.role === 'user')) { %>
         <li>
           <a href="/" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:text-blue-600 hover:bg-opacity-20 transition-all">
             Home
           </a>
         </li>
-        <li>
-          <a href="/dashboard" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:text-blue-600 hover:bg-opacity-20 transition-all">
-            Dashboard
-          </a>
-        </li>
+        <% } %>
+        <% if (typeof user !== 'undefined' && user && (user.role === 'admin')) { %>
+          <li>
+            <a href="/dashboard" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:text-blue-600 hover:bg-opacity-20 transition-all">
+              Dashboard
+            </a>
+          </li>
+        <% } %>
         <% if (typeof user !== 'undefined' && user) { %>
           <li>
             <a href="/api/users/logout" class="px-3 py-2 rounded-md text-sm font-medium bg-red-500 text-white hover:text-blue-600 hover:bg-red-600 transition-colors">

@@ -37,6 +37,7 @@ class Score {
         );
         return rows[0];
     }
+    //todo : fix the top 5 probleme
     static async getTopUsers(limit = 5) {
         try {
             console.log('Exécution de getTopUsers avec limit:', limit);
@@ -51,8 +52,6 @@ class Score {
             return [];
         }
     }
-
-
     static async getAverageScore() {
         const [rows] = await pool.execute(
             'SELECT AVG(score) AS average FROM Scores'
@@ -76,7 +75,7 @@ class Score {
     );
     return rows;
 }
-static async getGamesEvolution() {
+    static async getGamesEvolution() {
     const [rows] = await pool.execute(
         `SELECT 
             DATE_FORMAT(date_played, '%Y-%m') AS mois,
@@ -87,7 +86,7 @@ static async getGamesEvolution() {
     );
     return rows;
 }
- static async getUserScoreDetails(userId, thematique, date) {
+    static async getUserScoreDetails(userId, thematique, date) {
        const [rows] = await pool.execute(
                 `SELECT q.question, q.options, q.correctAnswers 
                  FROM Scores s
@@ -97,5 +96,5 @@ static async getGamesEvolution() {
             );
             return rows;
     }
-}
+    }
 module.exports = Score;
