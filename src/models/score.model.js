@@ -37,7 +37,6 @@ class Score {
         );
         return rows[0];
     }
-    //todo : fix the top 5 probleme
     static async getTopUsers(limit = 5) {
         try {
             console.log('Exécution de getTopUsers avec limit:', limit);
@@ -45,6 +44,7 @@ class Score {
                 `SELECT u.username, COALESCE(AVG(s.score), 0) as average 
              FROM Users u 
              LEFT JOIN Scores s ON u.id = s.user_id 
+             WHERE u.role = 'user'
              GROUP BY u.id, u.username 
              ORDER BY average DESC 
              LIMIT ${parseInt(limit)}`,
