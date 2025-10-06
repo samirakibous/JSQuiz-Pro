@@ -18,7 +18,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
-
+app.use(express.static('public'));
 app.use('/', routes);
 
 module.exports = app;
